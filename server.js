@@ -1,7 +1,11 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const io = require('socket.io');
+const io = require("socket.io");
+const {
+  userConnected,
+  userDisconnected,
+} = require("./controllers/userController");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
@@ -25,12 +29,27 @@ const server = app.listen(port, () => {
 const ioSocket = io(server, {
   cors: {
     origin: "http://localhost:3000",
-  }
-})
+  },
+});
 
-ioSocket.on('connection', (socket) => {
+ioSocket.on("connection", (socket) => {
   console.log("user Connected!");
-})
+  socket.on("connected", async (data) => {
+    // console.log("🚀 ~ file: server.js ~ line 35 ~ socket.on ~ data", {
+    //   data: { ...data, socketId: socket.id },
+    // });
+    data.user.socketId = socket.id;
+    await userConnected(data.user);
+  });
+  socket.on("disconnect", async (reason) => {
+    console.log("🚀 ~ file: server.js ~ line 35 ~ socket.on ~ userId", {
+      reason,
+      id: socket.id,
+    });
+    await userDisconnected(socket.id);
+    console.log("user Disconnected!");
+  });
+});
 
 process.on("unhandledRejection", (err) => {
   console.log("UNHANDLED REJECTION! 💥 Shutting down...");

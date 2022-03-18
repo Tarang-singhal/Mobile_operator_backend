@@ -9,6 +9,7 @@ router.get("/:userId", userController.getUser);
 router.get("/slotsAsUser/:userId", userController.getSlotsAsUser);
 router.get("/slotsAsConsultant/:userId", userController.getSlotsAsConsultant);
 router.patch("/saveAvailablity/:userId", userController.updateAvailability);
+router.get("/agent/active", userController.getActiveAgent);
 // router.get("/logout", authController.logout);
 
 // router.post("/forgotPassword", authController.forgotPassword);

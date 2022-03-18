@@ -34,12 +34,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"],
-    select: false,
   },
   active: {
     type: Boolean,
-    default: true,
-    select: false,
+    default: false,
   },
   lat: {
     type: Number,
@@ -49,8 +47,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 32,
   },
-
-
+  socketId: {
+    type: String,
+  },
 });
 
 userSchema.pre("save", async function (next) {

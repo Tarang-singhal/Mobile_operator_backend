@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("./../utils/apiFeatures");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.getUsers = catchAsync(async (req, res, next) => {
   //http://localhost:5000/user?limit=3&page=1
@@ -95,3 +96,73 @@ exports.updateAvailability = catchAsync(async (req, res, next) => {
     data: user,
   });
 });
+
+exports.getActiveAgent = catchAsync(async (req, res, next) => {
+  const user = await User.find({
+    availablity: true,
+    type: "agent",
+  });
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
+exports.userConnected = async (userInfo) => {
+  try {
+    const allUsers = await User.find();
+    console.log(
+      "🚀 ~ file: userController.js ~ line 114 ~ exports.userConnected= ~ allUsers",
+      allUsers
+    );
+
+    userInfo.id = userInfo._id;
+    // console.log(
+    //   "🚀 ~ file: userController.js ~ line 111 ~ exports.userConnected=catchAsync ~ userInfo",
+    //   userInfo
+    // );
+
+    // console.log(userInfo.id);
+
+    // const x = await User.findById(userInfo.id).exec();
+
+    const user = await User.findOneAndUpdate(
+      { email: userInfo.email },
+      {
+        active: true,
+        lat: userInfo.lat,
+        lng: userInfo.lng,
+        socketId: userInfo.socketId,
+      },
+      { new: true }
+    );
+    console.log(
+      "🚀 ~ file: userController.js ~ line 121 ~ exports.userConnected=catchAsync ~ user",
+      user
+    );
+  } catch (err) {
+    console.log(
+      "🚀 ~ file: userController.js ~ line 144 ~ exports.userConnected= ~ err",
+      err
+    );
+  }
+};
+
+exports.userDisconnected = async (socketId) => {
+  console.log(
+    "🚀 ~ file: userController.js ~ line 124 ~ exports.userDisconnected=catchAsync ~ socketId",
+    socketId
+  );
+  const user = await User.findOneAndUpdate(
+    { socketId },
+    {
+      active: false,
+      socketId: "",
+    },
+    { new: true, runValidators: true }
+  );
+  console.log(
+    "🚀 ~ file: userController.js ~ line 132 ~ exports.userDisconnected=catchAsync ~ user",
+    user
+  );
+};
