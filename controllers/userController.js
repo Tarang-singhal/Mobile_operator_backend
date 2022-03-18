@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("./../utils/apiFeatures");
-const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.getUsers = catchAsync(async (req, res, next) => {
   //http://localhost:5000/user?limit=3&page=1
@@ -110,24 +109,11 @@ exports.getActiveAgent = catchAsync(async (req, res, next) => {
 
 exports.userConnected = async (userInfo) => {
   try {
-    const allUsers = await User.find();
-    console.log(
-      "🚀 ~ file: userController.js ~ line 114 ~ exports.userConnected= ~ allUsers",
-      allUsers
-    );
 
     userInfo.id = userInfo._id;
-    // console.log(
-    //   "🚀 ~ file: userController.js ~ line 111 ~ exports.userConnected=catchAsync ~ userInfo",
-    //   userInfo
-    // );
 
-    // console.log(userInfo.id);
-
-    // const x = await User.findById(userInfo.id).exec();
-
-    const user = await User.findOneAndUpdate(
-      { email: userInfo.email },
+    const user = await User.findByIdAndUpdate(
+      userInfo.id,
       {
         active: true,
         lat: userInfo.lat,
