@@ -21,6 +21,7 @@ mongoose
   })
   .then(() => console.log("DB connection successful!"));
 
+
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
@@ -28,6 +29,7 @@ const server = app.listen(port, () => {
 
 const ioSocket = io(server, {
   cors: {
+<<<<<<< HEAD
     origin: "http://localhost:3000",
   },
 });
@@ -50,6 +52,25 @@ ioSocket.on("connection", (socket) => {
     console.log("user Disconnected!");
   });
 });
+=======
+    origin: process.env.APP_URL,
+  }
+})
+
+ioSocket.on('connection', (socket, userdata) => {
+  console.log("user Connected!");
+  socket.on('connected', () => {
+
+  })
+  socket.on('login', () => {
+
+  })
+  socket.on('locationChange', () => {
+
+  })
+
+})
+>>>>>>> 832ee34db33f95b08e1b5bcd44529f2446cf41dd
 
 process.on("unhandledRejection", (err) => {
   console.log("UNHANDLED REJECTION! 💥 Shutting down...");
