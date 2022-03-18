@@ -17,6 +17,7 @@ mongoose
   })
   .then(() => console.log("DB connection successful!"));
 
+
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
@@ -24,12 +25,22 @@ const server = app.listen(port, () => {
 
 const ioSocket = io(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.APP_URL,
   }
 })
 
-ioSocket.on('connection', (socket) => {
+ioSocket.on('connection', (socket, userdata) => {
   console.log("user Connected!");
+  socket.on('connected', () => {
+
+  })
+  socket.on('login', () => {
+
+  })
+  socket.on('locationChange', () => {
+
+  })
+
 })
 
 process.on("unhandledRejection", (err) => {
