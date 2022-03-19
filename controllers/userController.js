@@ -98,7 +98,7 @@ exports.updateAvailability = catchAsync(async (req, res, next) => {
 
 exports.getActiveAgent = catchAsync(async (req, res, next) => {
   const user = await User.find({
-    availablity: true,
+    active: true,
     type: "agent",
   });
   res.status(200).json({
@@ -122,10 +122,7 @@ exports.userConnected = async (userInfo) => {
       },
       { new: true }
     );
-    console.log(
-      "🚀 ~ file: userController.js ~ line 121 ~ exports.userConnected=catchAsync ~ user",
-      user
-    );
+
   } catch (err) {
     console.log(
       "🚀 ~ file: userController.js ~ line 144 ~ exports.userConnected= ~ err",
