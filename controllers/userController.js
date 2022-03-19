@@ -101,6 +101,10 @@ exports.getActiveAgent = catchAsync(async (req, res, next) => {
     active: true,
     type: "agent",
   });
+  console.log(
+    "🚀 ~ file: userController.js ~ line 104 ~ exports.getActiveAgent=catchAsync ~ user",
+    user
+  );
   res.status(200).json({
     status: "success",
     data: user,
@@ -109,7 +113,6 @@ exports.getActiveAgent = catchAsync(async (req, res, next) => {
 
 exports.userConnected = async (userInfo) => {
   try {
-
     userInfo.id = userInfo._id;
 
     const user = await User.findByIdAndUpdate(
@@ -122,7 +125,10 @@ exports.userConnected = async (userInfo) => {
       },
       { new: true }
     );
-
+    console.log(
+      "🚀 ~ file: userController.js ~ line 128 ~ exports.userConnected= ~ user",
+      user
+    );
   } catch (err) {
     console.log(
       "🚀 ~ file: userController.js ~ line 144 ~ exports.userConnected= ~ err",
