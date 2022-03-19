@@ -5,7 +5,11 @@ const userController = require("./../controllers/userController.js");
 const router = express.Router();
 
 router.get("/", userController.getUsers);
-router.get("/:userId", userController.getUser);
+router
+  .route("/:userId")
+  .get(userController.getUser)
+  .patch(userController.updateUser);
+
 router.get("/slotsAsUser/:userId", userController.getSlotsAsUser);
 router.get("/slotsAsConsultant/:userId", userController.getSlotsAsConsultant);
 router.patch("/saveAvailablity/:userId", userController.updateAvailability);

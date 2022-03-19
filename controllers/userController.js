@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("./../utils/apiFeatures");
 
@@ -155,3 +156,19 @@ exports.userDisconnected = async (socketId) => {
     user
   );
 };
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    return next(new AppError("No user found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
