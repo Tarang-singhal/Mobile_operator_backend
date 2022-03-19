@@ -6,7 +6,37 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const APIFeatures = require("./../utils/apiFeatures");
 const Slot = require("../models/slotsModel");
+const { type } = require("os");
 // const Email = require("./../utils/email");
+
+const createSlots = () => {
+  return [
+    {
+      start: "09:00",
+      end: "10:00",
+    },
+    {
+      start: "10:30",
+      end: "11:30",
+    },
+    {
+      start: "12:00",
+      end: "13:00",
+    },
+    {
+      start: "14:00",
+      end: "15:00",
+    },
+    {
+      start: "15:30",
+      end: "16:30",
+    },
+    {
+      start: "17:00",
+      end: "18:00",
+    },
+  ];
+};
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -42,6 +72,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     phone: req.body.phone,
     type: req.body.type,
     password: req.body.password,
+    slots: req.body.type === "agent" ? createSlots() : undefined,
   });
 
   createSendToken(newUser, 201, req, res);

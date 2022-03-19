@@ -49,8 +49,24 @@ const userSchema = new mongoose.Schema({
   },
   socketId: {
     type: String,
-    default: '',
+    default: "",
   },
+  slots: [
+    {
+      start: String,
+      end: String,
+      bookedDate: Number,
+      bookedBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        default: null,
+      },
+      isBooked: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {
