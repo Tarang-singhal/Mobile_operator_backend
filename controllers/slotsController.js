@@ -102,6 +102,7 @@ exports.bookSlot = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const agentId = req.body.agentId;
   const slotNumber = req.body.slotNumber;
+  console.log(req.body)
   const agent = await User.findById(agentId);
   const user = await User.findById(userId);
 
@@ -113,12 +114,17 @@ exports.bookSlot = catchAsync(async (req, res, next) => {
     return next(new AppError("Agent not found", 404));
   }
 
+  console.log(agent)
+
   agent.slots[slotNumber].isBooked = true;
   agent.slots[slotNumber].bookedDate = Date.now();
   agent.slots[slotNumber].bookedBy = userId;
 
   const obj = Object.assign({}, agent.slots[slotNumber]);
-  obj.agentId = agentId;
+  obj.agent_id = agentId;
+  obj.bookedBy = userId
+  obj.start = agent.slots[slotNumber].start
+  obj.end = agent.slots[slotNumber].end
   pushSlotToHistory(obj);
 
   await agent.save();
@@ -140,9 +146,9 @@ exports.getSlots = catchAsync(async (req, res, next) => {
 
   let slots = [];
   if (user.type === "agent") {
-    slots = await Slot.find({ agent_id: userId });
+    slots = await Slot.find({ agent_id: userId }).populate('bookedBy').exec();
   } else {
-    slots = await Slot.find({ bookedBy: userId });
+    slots = await Slot.find({ bookedBy: userId }).populate('agent_id').exec();
   }
 
   res.status(200).json({

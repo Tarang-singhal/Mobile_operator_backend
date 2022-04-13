@@ -8,7 +8,10 @@ const slotsSchema = new mongoose.Schema({
   },
   start: String,
   end: String,
-  bookedDate: Number,
+  bookedDate: {
+    type: Date,
+    default: Date.now()
+  },
   bookedBy: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
