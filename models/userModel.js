@@ -51,6 +51,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  walletAmount: {
+    type: Number,
+    default: 0,
+    required: true
+  },
   slots: [
     {
       start: String,
@@ -70,6 +75,14 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+  paymentHistory: [
+    {
+      STATUS: String,
+      TXNAMOUNT: String,
+      TXNDATE: Date,
+      TXNID: String,
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {

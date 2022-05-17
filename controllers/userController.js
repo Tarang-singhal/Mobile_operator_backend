@@ -26,8 +26,8 @@ exports.getUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.addMoney = async (userId, amount, transaction) => {
-  const doc = await User.findByIdAndUpdate(
-    userId,
+  const doc = await User.findOneAndUpdate(
+    { _id: userId },
     {
       $inc: { walletAmount: amount },
       $push: { paymentHistory: transaction },
@@ -35,9 +35,9 @@ exports.addMoney = async (userId, amount, transaction) => {
     { new: true }
   );
 
-  console.log(doc);
+  console.log(doc)
 
-  return doc;
+  // return doc;
 };
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.userId);
@@ -158,7 +158,17 @@ exports.userDisconnected = async (socketId) => {
 };
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+  let updatedUser = req.body
+  if (req.body.updateType === "location") {
+    updatedUser = {
+      lat: req.body.lat,
+      lng: req.body.lng
+    }
+  } else {
+    delete req.body.updateType
+  }
+
+  const user = await User.findByIdAndUpdate(req.params.userId, updatedUser, {
     new: true,
     runValidators: true,
   });

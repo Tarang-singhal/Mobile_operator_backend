@@ -102,7 +102,7 @@ exports.bookSlot = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const agentId = req.body.agentId;
   const slotNumber = req.body.slotNumber;
-  console.log(req.body)
+  // console.log(req.body)
   const agent = await User.findById(agentId);
   const user = await User.findById(userId);
 
@@ -114,7 +114,7 @@ exports.bookSlot = catchAsync(async (req, res, next) => {
     return next(new AppError("Agent not found", 404));
   }
 
-  console.log(agent)
+  // console.log(agent)
 
   agent.slots[slotNumber].isBooked = true;
   agent.slots[slotNumber].bookedDate = Date.now();
@@ -128,6 +128,20 @@ exports.bookSlot = catchAsync(async (req, res, next) => {
   pushSlotToHistory(obj);
 
   await agent.save();
+
+  user.walletAmount = user.walletAmount - 50;
+  user.paymentHistory.push({
+    STATUS: 'DEB_SUCCESS',
+    TXNID: '',
+    TXNDATE: Date.now(),
+    TXNAMOUNT: 50,
+  })
+
+  user.save()
+
+  console.log(doc)
+
+  await user.save();
 
   res.status(200).json({
     status: "success",
